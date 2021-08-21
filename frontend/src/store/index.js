@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 
 import trips from "./modules/trips";
 import bloggers from "./modules/bloggers";
+import hashtags from "./modules/hashtags";
 
 import { POST, GET, PUT, init_helpers } from "./../helpers";
 
@@ -16,6 +17,7 @@ const Store = createStore({
   modules: {
     trips,
     bloggers,
+    hashtags,
   },
 
   state: state_generator(),

@@ -39,7 +39,9 @@ def create_random_point(x0, y0, distance):
 
 def write_hashtags():
   for name in HASHTAGS:
-    trip = Hashtag(name=name)
+    hashtag = Hashtag(name=name)
+    db.session.add(hashtag)
+  db.session.commit()
 
 def write_places():
   for index in range(100):

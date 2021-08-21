@@ -170,3 +170,5 @@ class Post(db.Model, DictMixin):
   deleted = db.Column(db.Boolean)
   audience_coverage = db.Column(db.Integer)
   Blogger = db.relationship('Blogger', back_populates='Posts')
+  Hashtags = db.relationship('Hashtag', secondary=hashtag_post,
+                             backref=db.backref('Posts'))
