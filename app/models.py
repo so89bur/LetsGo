@@ -71,7 +71,7 @@ class Trip(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   route_id = db.Column(db.Integer, db.ForeignKey('route.id'))
   invitation_text = db.Column(db.String(500))
-  status_trip_id = db.relationship('Status', back_populates='Trips')
+  status_trip_id = db.Column(db.Integer, db.ForeignKey('status_trip.id'))
   name = db.Column(db.String(40), unique=True)
   date = db.Column(db.DateTime)
   min_count_folowers = db.Column(db.Integer)
@@ -89,6 +89,7 @@ class StatusTrip(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   name = db.Column(db.String(40), unique=True)
   label = db.Column(db.String(40), unique=True)
+  Trips = db.relationship('Trip', back_populates='Status')
 
 
 class InvitationInfo(DictMixin, db.Model):
