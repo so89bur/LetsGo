@@ -26,6 +26,7 @@
         :columns="columns"
         :pagination="pagination"
         row-key="name"
+        v-on:row-click="handler_table_row_click"
       >
         <template #no-data>
           <app-empty-info />
@@ -61,57 +62,64 @@ export default {
     columns: [
       {
         name: 'username',
-        label: 'Название',
+        label: 'Имя пользователя',
         sortable: true,
         field: 'username'
       },
       {
         name: 'full_name',
-        label: 'Дата',
+        label: 'Полное имя',
         sortable: true,
         field: 'full_name'
       },
       {
         name: 'followers',
         label: 'Число подписчиков',
+        sortable: true,
         field: 'followers'
       },
       {
-        name: 'count_likes',
-        label: 'Число лайков',
-        field: 'count_likes'
+        name: 'is_business_account',
+        label: 'Бизнес-аккаунт',
+        format: val => val ? 'Да' : 'Нет',
+        field: 'followers'
       },
-      {
-        name: 'count_comments',
-        label: 'Число комментариев',
-        field: 'count_comments'
-      },
-      {
-        name: 'count_posts',
-        label: 'Число постов',
-        field: 'count_posts'
-      },
-      {
-        name: 'er',
-        label: 'ER',
-        field: 'er'
-      },
-      {
-        name: 'public',
-        label: 'Доступен',
-        field: 'public'
-      },
-      {
-        name: 'verify',
-        label: 'Потвержден',
-        field: 'verify'
-      },
-      {
-        name: 'Posts',
-        label: 'Посты',
-        format: val => `${val ? val.length : 0}`,
-        field: 'Posts'
-      },
+      // {
+      //   name: 'count_likes',
+      //   label: 'Число лайков',
+      //   field: 'count_likes'
+      // },
+      // {
+      //   name: 'count_comments',
+      //   label: 'Число комментариев',
+      //   field: 'count_comments'
+      // },
+      // {
+      //   name: 'count_posts',
+      //   label: 'Число постов',
+      //   field: 'count_posts'
+      // },
+      // {
+      //   name: 'er',
+      //   label: 'ER',
+      //   field: 'er'
+      // },
+      // {
+      //   name: 'public',
+      //   label: 'Доступен',
+      //   field: 'public'
+      // },
+      // {
+      //   name: 'verify',
+      //   label: 'Потвержден',
+      //   field: 'verify'
+      // },
+      // {
+      //   name: 'Posts',
+      //   label: 'Посты',
+      //   format: val => `${val ? val.length : 0}`,
+      //   field: 'Posts'
+      // },
     ]
   }),
 
@@ -128,6 +136,10 @@ export default {
   },
 
   methods: {
+    handler_table_row_click (event, row, index) {
+      window.open(`https://www.instagram.com/${row.username}`, '_blank')
+    },
+
     prepare_items () {
       this.items.splice(0, this.items.length)
       this.object = this.$store.getters['trips/get_item'](this.id)
@@ -188,6 +200,31 @@ export default {
 
     .form_item {
       width: 300px;
+    }
+  }
+
+  .q-table {
+    .q-table__top,
+    .q-table__bottom,
+    thead > tr:first-child > th {
+      background-color: $primary;
+      color: $light;
+    }
+
+    & > thead > tr {
+      &:first-child > th {
+        top: 0;
+      }
+
+      & > th {
+        position: sticky;
+        z-index: 1;
+      }
+    }
+
+    & > tbody > tr:hover {
+      background-color: $accent;
+      color: $light;
     }
   }
 }
