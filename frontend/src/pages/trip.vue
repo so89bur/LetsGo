@@ -26,7 +26,6 @@
         :columns="columns"
         :pagination="pagination"
         row-key="name"
-        v-on:row-click="handler_table_row_click"
       >
         <template #no-data>
           <app-empty-info />

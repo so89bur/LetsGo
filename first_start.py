@@ -1,3 +1,5 @@
+import json
+
 from random import randint, choice
 
 from datetime import datetime
@@ -62,11 +64,15 @@ def write_posts():
   db.session.commit()
 
 def write_bloggers():
-  for index in range(20):
+  file = open('app/data.json')
+  file_data = json.load(file)
+  for username, info in file_data.items():
     blogger = Blogger()
-    blogger.username = 'username_{}'.format(index)
-    blogger.full_name = 'Пользователь {}'.format(index)
-    blogger.followers = randint(1000, 500000)
+    blogger.username = username
+    blogger.full_name = info['full_name']
+    blogger.followers = info['followers']
+    blogger.is_business_account = info['is_business_account']
+    blogger.profile_pic_url = info['profile_pic_url']
     blogger.count_likes = randint(5000, 10000)
     blogger.count_comments = randint(100, 5000)
     blogger.count_posts = randint(100, 5000)
