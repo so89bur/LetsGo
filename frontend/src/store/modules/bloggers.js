@@ -15,7 +15,7 @@ export default {
       return state.items[id];
     },
 
-    get_items(state) {
+    get_items (state) {
       return Object.values(state.items).sort((a, b) => {
         let a_id = parseInt(a.id);
         let b_id = parseInt(b.id);
@@ -27,18 +27,18 @@ export default {
   },
 
   mutations: {
-    reset(state) {
+    reset (state) {
       const initial = state_generator();
       Object.keys(initial).forEach((key) => {
         state[key] = initial[key];
       });
     },
 
-    set_item(state, info) {
+    set_item (state, info) {
       state.items[info.id] = info;
     },
 
-    set_info(state, info) {
+    set_info (state, info) {
       if (info) {
         let allow_props = Object.keys(state.info);
         Object.keys(info).forEach((prop) => {
@@ -49,7 +49,7 @@ export default {
   },
 
   actions: {
-    async get_items(cxt, info) {
+    async get_items (cxt, info) {
       info = info ? info : {};
       let data = await GET("/bloggers", {
         start: info.start || 0,

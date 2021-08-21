@@ -50,6 +50,41 @@ def prepare_trip(instance):
 
 
 @support
+@app.route('/api/v1/trip/attach/blogger', methods=['POST'])
+def attach_blogger():
+  data = json.loads(request.data)
+  trip_id = data.get('trip_id', None)
+  blogger_id = data.get('blogger_id', None)
+  trip = Trip.query.filter_by(id=trip_id).first()
+  exists_bloggers_ids = []
+  if trip:
+    for blogger in trip.Bloggers:
+      if blogger.id not in exists_bloggers_ids:
+        exists_bloggers_ids.append(blogger.id)
+    if blogger_id not in exists_bloggers_ids:
+      new_blogger = Blogger.query.filter_by(id=blogger_id).first()
+      if new_blogger:
+        trip.Bloggers.append(new_blogger)
+  db.session.commit()
+  return json.dumps({'success': True})
+
+@support
+@app.route('/api/v1/trip/detach/blogger', methods=['POST'])
+def detach_blogger():
+  data = json.loads(request.data)
+  trip_id = data.get('trip_id', None)
+  blogger_id = data.get('blogger_id', None)
+  trip = Trip.query.filter_by(id=trip_id).first()
+  exists_bloggers = []
+  if trip:
+    for blogger in trip.Bloggers:
+      if blogger.id != blogger_id:
+        exists_bloggers.append(blogger)
+    trip.Bloggers = exists_bloggers
+  db.session.commit()
+  return json.dumps({'success': True})
+
+@support
 @app.route('/api/v1/trip', methods=['POST'])
 def new_trip():
   data = prepare_form_data(request.form)
@@ -92,9 +127,9 @@ def get_trips():
   items = []
   if search_query:
     search_value = '%{}%'.format(search_query).lower()
-    query = Trip.query.filter(trip.name.ilike(search_value))
+    query = Trip.query.filter(Trip.name.ilike(search_value))
   elif filter_value and filter_prop:
-    query = Trip.query.filter(getattr(trip, filter_prop) == filter_value)
+    query = Trip.query.filter(getattr(Trip, filter_prop) == filter_value)
   else:
     query = Trip.query
   if order_type == 'asc':

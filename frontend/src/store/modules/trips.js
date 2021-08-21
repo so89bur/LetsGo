@@ -57,6 +57,44 @@ export default {
       resolve()
     },
 
+    async update_item (cxt, id) {
+      let data = await GET(`/trip/${id}`)
+      if (data.success) {
+        cxt.commit('set_item', data.result)
+      } else {
+        let err_msg = "Не удалось обновить поездку";
+        cxt.commit("show_error", err_msg, { root: true });
+      }
+    },
+
+    async attach_blogger (cxt, info) {
+      let data = await POST('/trip/attach/blogger', {
+        blogger_id: info.blogger_id,
+        trip_id: info.trip_id,
+      })
+      if (data.success) {
+        let err_msg = "Блогер успешно привязан к поездке";
+        cxt.commit("show_info", err_msg, { root: true });
+      } else {
+        let err_msg = "Не удалось привязать блогера к поездке";
+        cxt.commit("show_error", err_msg, { root: true });
+      }
+    },
+
+    async detach_blogger (cxt, info) {
+      let data = await POST('/trip/detach/blogger', {
+        blogger_id: info.blogger_id,
+        trip_id: info.trip_id,
+      })
+      if (data.success) {
+        let err_msg = "Блогер успешно отвязан от поездки";
+        cxt.commit("show_info", err_msg, { root: true });
+      } else {
+        let err_msg = "Не удалось отвязать блогера от поездки";
+        cxt.commit("show_error", err_msg, { root: true });
+      }
+    },
+
     async get_items (cxt, info) {
       info = info ? info : {}
       let data = await GET('/trips', {

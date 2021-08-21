@@ -1,38 +1,134 @@
 <template>
   <q-page class="trip-page">
-    <q-form class="half_page first q-gutter-md ">
-      <template
-        v-for="item in items"
-        :key="item.name"
-      >
-        <q-input
-          v-if="['text', 'textarea', 'number'].includes(item.type)"
-          filled
-          disable
-          class="form_item"
-          v-model="item.value"
-          :type="item.type"
-          :label="item.label"
-        />
-      </template>
-    </q-form>
-    <q-separator />
-    <div class="half_page second">
-      <q-table
-        title="Блогеры"
-        class="page_grid"
-        hide-bottom
-        :rows="object ? object.Bloggers : []"
-        :columns="columns"
-        :pagination="pagination"
-        row-key="name"
-        v-on:row-click="handler_table_row_click"
-      >
-        <template #no-data>
-          <app-empty-info />
+    <q-card class="page_card">
+      <q-toolbar class="bg-primary text-white">
+        Добавление новой поездки
+      </q-toolbar>
+      <q-dialog v-model="is_showed_form_for_attach_blogger">
+        <q-card style="width: 550px">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6">Привязка блогера</div>
+            <q-space />
+            <q-btn
+              icon="fas fa-times"
+              flat
+              round
+              dense
+              v-close-popup
+            />
+          </q-card-section>
+
+          <q-card-section>
+            <q-select
+              filled
+              v-model="selected_blogger"
+              :options="bloggers"
+              label="Выеберите блогера"
+              emit-value
+              map-options
+            />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              label="Отмена"
+              color="primary"
+              v-close-popup
+            />
+            <q-btn
+              flat
+              label="Добавить"
+              color="primary"
+              v-on:click="attach_bloger(selected_blogger)"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-form class="half_page first q-gutter-md ">
+        <template
+          v-for="item in items"
+          :key="item.name"
+        >
+          <q-input
+            v-if="['text', 'textarea', 'number'].includes(item.type)"
+            filled
+            disable
+            class="form_item"
+            v-model="item.value"
+            :type="item.type"
+            :label="item.label"
+          />
         </template>
-      </q-table>
-    </div>
+      </q-form>
+      <q-separator />
+      <div class="half_page second">
+        <q-table
+          class="page_grid"
+          hide-bottom
+          :loading="is_loading"
+          :rows="object ? object.Bloggers : []"
+          :columns="columns"
+          :pagination="pagination"
+          row-key="name"
+          v-on:row-click="handler_table_row_click"
+        >
+          <template #no-data>
+            <app-empty-info />
+          </template>
+
+          <template #header="props">
+            <q-tr :props="props">
+              <q-th />
+              <q-th
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
+                {{ col.label }}
+              </q-th>
+            </q-tr>
+          </template>
+
+          <template #body="props">
+            <q-tr :props="props">
+              <q-td>
+                <q-btn
+                  round
+                  flat
+                  color="primary"
+                  title="Исключить блогера из поездки"
+                  icon="fas fa-trash"
+                  v-on:click="detach_bloger(props.row.id)"
+                />
+              </q-td>
+              <q-td
+                v-for="col in columns"
+                :key="col.name"
+                :props="props"
+              >
+                {{ props.row[col.name] }}
+              </q-td>
+            </q-tr>
+          </template>
+
+          <template #top>
+            <div class="row full-width">
+              <div class="table_title q-pa-sm">Блогеры</div>
+              <q-space />
+              <q-btn
+                round
+                flat
+                color="primary"
+                title="Добавить нового блогера"
+                icon="fas fa-plus-circle"
+                v-on:click="show_form_for_attach_blogger"
+              />
+            </div>
+          </template>
+        </q-table>
+      </div>
+    </q-card>
   </q-page>
 </template>
 
@@ -49,11 +145,14 @@ const ALLOW_PROPS = {
 
 export default {
   mounted () {
+    this.$store.dispatch('bloggers/get_items')
     this.prepare_items()
   },
 
   data: () => ({
     is_loading: false,
+    selected_blogger: null,
+    is_showed_form_for_attach_blogger: false,
     items: [],
     object: {},
     pagination: {
@@ -134,11 +233,50 @@ export default {
     id () {
       return this.$route.params.id
     },
+
+    bloggers () {
+      return this.$store.getters['bloggers/get_items'].map(item => ({
+        label: item.username,
+        value: item.id,
+      }))
+    }
   },
 
   methods: {
     handler_table_row_click (event, row, index) {
       window.open(`https://www.instagram.com/${row.username}`, '_blank')
+    },
+
+    show_form_for_attach_blogger () {
+      this.is_showed_form_for_attach_blogger = true
+    },
+
+    async attach_bloger (blogger_id) {
+      this.is_loading = true
+      await this.$store.dispatch('trips/attach_blogger', {
+        trip_id: this.id,
+        blogger_id: blogger_id
+      })
+      this.is_showed_form_for_attach_blogger = false
+      this.selected_blogger = null
+      setTimeout(async () => {
+        await this.$store.dispatch('trips/update_item', this.id)
+        this.prepare_items()
+        this.is_loading = false
+      }, 500)
+    },
+
+    async detach_bloger (blogger_id) {
+      this.is_loading = true
+      await this.$store.dispatch('trips/detach_blogger', {
+        trip_id: this.id,
+        blogger_id: blogger_id
+      })
+      setTimeout(async () => {
+        await this.$store.dispatch('trips/update_item', this.id)
+        this.prepare_items()
+        this.is_loading = false
+      }, 500)
     },
 
     prepare_items () {
@@ -162,21 +300,6 @@ export default {
                 label: ALLOW_PROPS[prop_name],
                 type: 'number'
               })
-            else if (type == 'object')
-              if (Array.isArray(this.object[prop_name]))
-                this.items.push({
-                  name: prop_name,
-                  value: this.object[prop_name],
-                  label: ALLOW_PROPS[prop_name],
-                  type: 'list'
-                })
-              else
-                this.items.push({
-                  name: prop_name,
-                  value: this.object[prop_name],
-                  label: ALLOW_PROPS[prop_name],
-                  type: 'object'
-                })
           }
         })
     },
@@ -189,19 +312,20 @@ export default {
   display: flex;
   flex-direction: column;
 
+  & > .page_card {
+    width: 1000px;
+    height: calc(100vh - 150px);
+    position: relative;
+    margin: 16px auto;
+  }
+
   .half_page {
     overflow-y: auto;
-
-    &.first {
-      height: calc(calc(calc(100vh - 72px) / 2) - 200px);
-    }
-
-    &.second {
-      height: calc(calc(calc(100vh - 72px) / 2) + 200px);
-    }
+    height: calc(50%);
 
     & > .page_grid {
-      height: calc(calc(calc(100vh - 72px) / 2) + 200px);
+      padding: 16px;
+      height: 100%;
     }
   }
 
