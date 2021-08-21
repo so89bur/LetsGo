@@ -54,6 +54,7 @@ export default {
         { label: 'Блогеры', name: 'bloggers' },
         { label: 'Хештеги', name: 'hashtags' },
         { label: 'Посты', name: 'posts' },
+        { label: 'Настройки', name: 'settings' },
       ]
     },
 

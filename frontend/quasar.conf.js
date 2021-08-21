@@ -26,7 +26,7 @@ module.exports = configure(function (ctx) {
       config: {},
       iconSet: 'fontawesome-v5',
       lang: 'ru',
-      plugins: []
+      plugins: ['Notify']
     },
     animations: [],
     ssr: {

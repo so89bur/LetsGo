@@ -48,6 +48,15 @@ const routes = [
   },
 
   {
+    path: '/settings',
+    component: () => import('pages/settings.vue'),
+    name: 'settings',
+    meta: {
+      title: 'Настройки'
+    }
+  },
+
+  {
     path: '/posts',
     component: () => import('pages/posts.vue'),
     name: 'posts',
