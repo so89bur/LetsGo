@@ -41,6 +41,7 @@ def prepare_trip(instance):
     'id': instance.id,
     'name': instance.name,
     'date': send_datetime_to_client(instance.date),
+    'invitation_text': instance.invitation_text,
     'Bloggers': prepared_bloggers,
     'Posts': prepared_posts,
     'Hashtags': prepared_hashtags,

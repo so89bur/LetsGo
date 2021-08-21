@@ -104,7 +104,7 @@ def write_trips():
     trip = Trip()
     trip.name = 'Поздка {}'.format(index)
     trip.date = datetime.now()
-    trip.Invitation = choice(InvitationInfo.query.all())
+    trip.invitation_text = choice(InvitationInfo.query.all()).label
     db.session.add(trip)
   db.session.commit()
 

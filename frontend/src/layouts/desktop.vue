@@ -2,7 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="q-pa-md">
-        <q-toolbar-title>
+        <q-toolbar-title
+          class="cursor-pointer"
+          v-on:click="$router.push('/trips')"
+        >
           Let's go
         </q-toolbar-title>
         <template

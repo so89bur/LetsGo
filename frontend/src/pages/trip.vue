@@ -1,12 +1,12 @@
 <template>
   <q-page class="trip-page">
-    <q-form class="half_page q-gutter-md ">
+    <q-form class="half_page first q-gutter-md ">
       <template
         v-for="item in items"
         :key="item.name"
       >
         <q-input
-          v-if="['string', 'number'].includes(item.type)"
+          v-if="['text', 'textarea', 'number'].includes(item.type)"
           filled
           disable
           class="form_item"
@@ -17,7 +17,7 @@
       </template>
     </q-form>
     <q-separator />
-    <div class="half_page">
+    <div class="half_page second">
       <q-table
         title="Блогеры"
         class="page_grid"
@@ -40,6 +40,7 @@
 const ALLOW_PROPS = {
   name: 'Название',
   date: 'Дата',
+  invitation_text: 'Текст приглашения',
   Bloggers: 'Блогеры',
   Posts: 'Посты',
   Hashtags: 'Хештеги',
@@ -152,7 +153,7 @@ export default {
                 name: prop_name,
                 value: this.object[prop_name],
                 label: ALLOW_PROPS[prop_name],
-                type: 'string'
+                type: prop_name == 'invitation_text' ? 'textarea' : 'text'
               })
             else if (type == 'number')
               this.items.push({
@@ -189,8 +190,19 @@ export default {
   flex-direction: column;
 
   .half_page {
-    height: calc(calc(100vh - 72px) / 2);
     overflow-y: auto;
+
+    &.first {
+      height: calc(calc(calc(100vh - 72px) / 2) - 200px);
+    }
+
+    &.second {
+      height: calc(calc(calc(100vh - 72px) / 2) + 200px);
+    }
+
+    & > .page_grid {
+      height: calc(calc(calc(100vh - 72px) / 2) + 200px);
+    }
   }
 
   .q-form {
