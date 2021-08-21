@@ -51,6 +51,7 @@ export default {
       return [
         { label: 'Поездки', name: 'trips' },
         { label: 'Маршруты', name: 'routes' },
+        { label: 'Места', name: 'places' },
         { label: 'Блогеры', name: 'bloggers' },
         { label: 'Хештеги', name: 'hashtags' },
         { label: 'Посты', name: 'posts' },

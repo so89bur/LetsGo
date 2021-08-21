@@ -23,4 +23,4 @@ def support(func):
       db and db.close()
     return func_wrapper
 
-from . import trips, bloggers, inst_search, hashtags, settings
+from . import trips, bloggers, inst_search, hashtags, settings, places

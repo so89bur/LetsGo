@@ -1,12 +1,17 @@
 import json
 
 from random import randint, choice
+import random
+import math
 
 from datetime import datetime
 
 from app import app, db
 from app.models import Trip, Post, Blogger, Hashtag, TypeMedia, StatusTrip, \
-  InvitationInfo
+  InvitationInfo, Place
+
+BASE_LAT = 0
+BASE_LON = 0
 
 INVITATIONS = [
   'Хотим пригласить вас принять участие в травел-поездке'
@@ -25,16 +30,16 @@ def clear_data():
 
 def create_random_point(x0, y0, distance):
   r = distance / 111300
-  u = np.random.uniform(0, 1)
-  v = np.random.uniform(0, 1)
-  w = r * np.sqrt(u)
-  t = 2 * np.pi * v
-  x = w * np.cos(t)
-  x1 = x / np.cos(y0)
-  y = w * np.sin(t)
+  u = random.uniform(0, 1)
+  v = random.uniform(0, 1)
+  w = r * math.sqrt(u)
+  t = 2 * math.pi * v
+  x = w * math.cos(t)
+  x1 = x / math.cos(y0)
+  y = w * math.sin(t)
   return {
-    lat: round(x0 + x1, 5),
-    lon: round(y0 + y, 5),
+    "lat": round(x0 + x1, 5),
+    "lon": round(y0 + y, 5),
   }
 
 def write_hashtags():
@@ -46,7 +51,7 @@ def write_hashtags():
 def write_places():
   for index in range(100):
     place = Place()
-    point = create_random_point(BASE_LAT, BASE_LONG, 100000)
+    point = create_random_point(BASE_LAT, BASE_LON, 100000)
     place.name = 'place {}'.format(index)
     place.lat = point['lat']
     place.lon = point['lon']
@@ -133,6 +138,7 @@ if __name__ == '__main__':
   reset_db()
   write_base_data()
   write_hashtags()
+  write_places()
   write_posts()
   write_trips()
   write_bloggers()

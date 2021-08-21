@@ -10,6 +10,15 @@ const routes = [
   },
 
   {
+    path: '/places',
+    component: () => import('pages/places.vue'),
+    name: 'places',
+    meta: {
+      title: 'Места'
+    }
+  },
+
+  {
     path: '/trips/:id',
     component: () => import('pages/trip.vue'),
     name: 'trip',
