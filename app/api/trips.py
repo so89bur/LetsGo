@@ -59,7 +59,7 @@ def new_trip():
       setattr(instance, property_name, property_value)
   db.session.add(instance)
   db.session.commit()
-  return json.dumps({ 'success': True })
+  return json.dumps({'success': True})
 
 
 @support
@@ -75,7 +75,7 @@ def get_trip(id):
       'result': result
     })
   else:
-    return json.dumps({ 'success': False })
+    return json.dumps({'success': False})
 
 
 @support
@@ -120,9 +120,9 @@ def edit_trip(id):
         instance[property_name] = property_value
     db.session.add(instance)
     db.session.commit()
-    return json.dumps({ 'success': True })
+    return json.dumps({'success': True})
   else:
-    return json.dumps({ 'success': False })
+    return json.dumps({'success': False})
 
 
 @support
@@ -131,6 +131,6 @@ def remove_trip(id):
   if id:
     Trip.query.filter_by(id=id).first().delete()
     db.session.commit()
-    return json.dumps({ 'success': True })
+    return json.dumps({'success': True})
   else:
-    return json.dumps({ 'success': False })
+    return json.dumps({'success': False})

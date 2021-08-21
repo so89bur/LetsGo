@@ -23,4 +23,4 @@ def support(func):
       db and db.close()
     return func_wrapper
 
-from . import trips, inst_search
+from . import trips, bloggers, inst_search
