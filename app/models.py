@@ -70,6 +70,7 @@ class Trip(DictMixin, db.Model):
   invitation_id = db.Column(db.Integer, db.ForeignKey('invitation_info.id'))
   name = db.Column(db.String(40), unique=True)
   date = db.Column(db.DateTime)
+  min_count_folowers = db.Column(db.Integer)
   Invitation = db.relationship('InvitationInfo', back_populates='Trips')
   Bloggers = db.relationship('Blogger', secondary=blogger_trip,
     backref=db.backref('Trips'))

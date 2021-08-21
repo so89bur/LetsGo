@@ -22,3 +22,5 @@ def support(func):
     finally:
       db and db.close()
     return func_wrapper
+
+from . import trips
