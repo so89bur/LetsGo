@@ -1,9 +1,9 @@
 
 const routes = [
   {
-    path: '/',
-    component: () => import('pages/index.vue'),
-    name: 'index',
+    path: '/trips',
+    component: () => import('pages/trips.vue'),
+    name: 'trips',
     meta: {
       title: 'Поездки'
     }
@@ -21,9 +21,36 @@ const routes = [
   },
 
   {
-    path: '/:catchAll(.*)*',
-    redirect: '/'
-  }
+    path: '/routes',
+    component: () => import('pages/routes.vue'),
+    name: 'routes',
+    meta: {
+      title: 'Маршруты'
+    }
+  },
+
+  {
+    path: '/bloggers',
+    component: () => import('pages/bloggers.vue'),
+    name: 'bloggers',
+    meta: {
+      title: 'Блогеры'
+    }
+  },
+
+  {
+    path: '/posts',
+    component: () => import('pages/posts.vue'),
+    name: 'posts',
+    meta: {
+      title: 'Посты'
+    }
+  },
+
+  // {
+  //   path: '/:catchAll(.*)*',
+  //   redirect: '/trips'
+  // }
 ]
 
 export default routes
