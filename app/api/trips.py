@@ -8,6 +8,14 @@ from app.api import support
 from app.models import Trip, Blogger, Post, Hashtag
 
 
+def is_post_of_this_trip(posts, trip):
+  for post in posts:
+    for post_trip in post.Trips:
+      if post_trip == trip:
+        return True
+  return False
+
+
 def prepare_trip(instance):
   prepared_posts = []
   prepared_hashtags = []
@@ -20,6 +28,7 @@ def prepare_trip(instance):
       'followers': blogger.followers,
       'profile_pic_url': blogger.profile_pic_url,
       'is_business_account': blogger.is_business_account,
+      'has_posts': is_post_of_this_trip(blogger.Posts, instance),
     })
   for hashtag in instance.Hashtags:
     prepared_hashtags.append({

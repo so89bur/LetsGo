@@ -89,29 +89,46 @@ def write_bloggers():
     random_posts = []
     random_trips = []
     exist_posts = []
-    for post_index in range(20):
-      post = choice(Post.query.all())
-      if post.id not in exist_posts:
-        random_posts.append(post)
-        exist_posts.append(post.id)
-    exist_trips = []
-    blogger.Posts = random_posts
-    for trip_index in range(5):
-      trip = choice(Trip.query.all())
-      if trip.id not in exist_trips:
-        random_trips.append(trip)
-        exist_trips.append(trip.id)
-    blogger.Posts = random_posts
-    blogger.Trips = random_trips
+    # for post_index in range(20):
+    #   post = choice(Post.query.all())
+    #   if post.id not in exist_posts:
+    #     random_posts.append(post)
+    #     exist_posts.append(post.id)
+    # exist_trips = []
+    # blogger.Posts = random_posts
+    # for trip_index in range(5):
+    #   trip = choice(Trip.query.all())
+    #   if trip.id not in exist_trips:
+    #     random_trips.append(trip)
+    #     exist_trips.append(trip.id)
+    # blogger.Posts = random_posts
+    # blogger.Trips = random_trips
     db.session.add(blogger)
   db.session.commit()
 
 def write_trips():
+
+
   for index in range(20):
     trip = Trip()
     trip.name = 'Поздка {}'.format(index)
     trip.date = datetime.now()
     trip.invitation_text = choice(InvitationInfo.query.all()).label
+
+    random_bloggers = random.sample(Blogger.query.all(), 10)
+    trip.Bloggers = random_bloggers
+    for blogger in random_bloggers:
+      if random.choice([0, 1]) == 1:
+        post = Post()
+        post.name = 'Post {}'.format(index)
+        post.date = datetime.now()
+        post.count_likes = randint(5000, 10000)
+        post.count_comments = randint(100, 5000)
+        post.deleted = False
+        post.audience_coverage = randint(0, 100)
+        post.Blogger = blogger
+        post.Trips.append(trip)
+        db.session.add(post)
     db.session.add(trip)
   db.session.commit()
 
@@ -139,6 +156,6 @@ if __name__ == '__main__':
   write_base_data()
   write_hashtags()
   write_places()
-  write_posts()
-  write_trips()
+  # write_posts()
   write_bloggers()
+  write_trips()

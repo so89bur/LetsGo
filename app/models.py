@@ -164,6 +164,7 @@ class User(DictMixin, db.Model):
 class Post(db.Model, DictMixin):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   blogger_id = db.Column(db.Integer, db.ForeignKey('blogger.id'))
+  trip_id = db.Column(db.Integer, db.ForeignKey('trip.id'))
   name = db.Column(db.String(200))
   date = db.Column(db.DateTime)
   count_likes = db.Column(db.Integer)

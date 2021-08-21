@@ -62,6 +62,13 @@ export default {
     },
     columns: [
       {
+        name: 'has_posts',
+        label: 'Посты найдены',
+        sortable: true,
+        field: 'has_posts',
+        format: val => `${val ? "Да" : "Нет"}`,
+      },
+      {
         name: 'username',
         label: 'Имя пользователя',
         sortable: true,
