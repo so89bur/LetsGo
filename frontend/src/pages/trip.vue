@@ -132,35 +132,35 @@ export default {
       this.items.splice(0, this.items.length)
       this.object = this.$store.getters['trips/get_item'](this.id)
       if (this.object)
-        Object.keys(item).forEach(prop_name => {
+        Object.keys(this.object).forEach(prop_name => {
           if (Object.keys(ALLOW_PROPS).includes(prop_name)) {
-            let type = typeof item[prop_name]
+            let type = typeof this.object[prop_name]
             if (type == 'string')
               this.items.push({
                 name: prop_name,
-                value: item[prop_name],
+                value: this.object[prop_name],
                 label: ALLOW_PROPS[prop_name],
                 type: 'string'
               })
             else if (type == 'number')
               this.items.push({
                 name: prop_name,
-                value: item[prop_name],
+                value: this.object[prop_name],
                 label: ALLOW_PROPS[prop_name],
                 type: 'number'
               })
             else if (type == 'object')
-              if (Array.isArray(item[prop_name]))
+              if (Array.isArray(this.object[prop_name]))
                 this.items.push({
                   name: prop_name,
-                  value: item[prop_name],
+                  value: this.object[prop_name],
                   label: ALLOW_PROPS[prop_name],
                   type: 'list'
                 })
               else
                 this.items.push({
                   name: prop_name,
-                  value: item[prop_name],
+                  value: this.object[prop_name],
                   label: ALLOW_PROPS[prop_name],
                   type: 'object'
                 })
@@ -178,6 +178,7 @@ export default {
 
   .half_page {
     height: calc(calc(100vh - 72px) / 2);
+    overflow-y: auto;
   }
 
   .q-form {
