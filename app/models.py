@@ -16,39 +16,40 @@ class BaseMixin(DictMixin):
 
 
 blogger_trip = db.Table('blogger_trip',
-  db.Column('blogger_id', db.Integer, db.ForeignKey('blogger.id'),
-    primary_key=True),
-  db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
-    primary_key=True)
-)
+                        db.Column('blogger_id', db.Integer, db.ForeignKey('blogger.id'),
+                                  primary_key=True),
+                        db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
+                                  primary_key=True)
+                        )
 
 blogger_post = db.Table('blogger_post',
-  db.Column('blogger_id', db.Integer, db.ForeignKey('blogger.id'),
-    primary_key=True),
-  db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
-    primary_key=True)
-)
+                        db.Column('blogger_id', db.Integer, db.ForeignKey('blogger.id'),
+                                  primary_key=True),
+                        db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
+                                  primary_key=True)
+                        )
 
 post_trip = db.Table('post_trip',
-  db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
-    primary_key=True),
-  db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
-    primary_key=True)
-)
+                     db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
+                               primary_key=True),
+                     db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
+                               primary_key=True)
+                     )
 
 hashtag_trip = db.Table('hashtag_trip',
-  db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'),
-    primary_key=True),
-  db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
-    primary_key=True)
-)
+                        db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'),
+                                  primary_key=True),
+                        db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'),
+                                  primary_key=True)
+                        )
 
 hashtag_post = db.Table('hashtag_post',
-  db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'),
-    primary_key=True),
-  db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
-    primary_key=True)
-)
+                        db.Column('hashtag_id', db.Integer, db.ForeignKey('hashtag.id'),
+                                  primary_key=True),
+                        db.Column('post_id', db.Integer, db.ForeignKey('post.id'),
+                                  primary_key=True)
+                        )
+
 
 class Blogger(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -69,18 +70,19 @@ class Blogger(DictMixin, db.Model):
 class Trip(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   route_id = db.Column(db.Integer, db.ForeignKey('route.id'))
-  invitation_id = db.Column(db.Integer, db.ForeignKey('invitation_info.id'))
+  invitation_text = db.Column(db.String(500))
+  status_trip_id = db.relationship('Status', back_populates='Trips')
   name = db.Column(db.String(40), unique=True)
   date = db.Column(db.DateTime)
   min_count_folowers = db.Column(db.Integer)
-  Invitation = db.relationship('InvitationInfo', back_populates='Trips')
   Bloggers = db.relationship('Blogger', secondary=blogger_trip,
-    backref=db.backref('Trips'))
+                             backref=db.backref('Trips'))
   Hashtags = db.relationship('Hashtag', secondary=hashtag_trip,
-    backref=db.backref('Trips'))
+                             backref=db.backref('Trips'))
   Posts = db.relationship('Post', secondary=post_trip,
-    backref=db.backref('Trips'))
+                          backref=db.backref('Trips'))
   Route = db.relationship('Route', back_populates='Trips')
+  Status = db.relationship('StatusTrip', back_populates='Trips')
 
 
 class StatusTrip(DictMixin, db.Model):
@@ -88,20 +90,23 @@ class StatusTrip(DictMixin, db.Model):
   name = db.Column(db.String(40), unique=True)
   label = db.Column(db.String(40), unique=True)
 
+
 class InvitationInfo(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   label = db.Column(db.String(500), unique=True)
-  Trips = db.relationship('Trip', back_populates='Invitation')
+
 
 class TypeMedia(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   label = db.Column(db.String(40), unique=True)
+
 
 class Route(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   name = db.Column(db.String(40), unique=True)
   RoutePlaces = db.relationship('RoutePlace', back_populates='Route')
   Trips = db.relationship('Trip', back_populates='Route')
+
 
 class RoutePlace(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -153,6 +158,7 @@ class User(DictMixin, db.Model):
   def check_password(self, password):
     return check_password_hash(self.pass_hash, password)
 
+
 class Post(db.Model, DictMixin):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   blogger_id = db.Column(db.Integer, db.ForeignKey('blogger.id'))
@@ -163,4 +169,3 @@ class Post(db.Model, DictMixin):
   deleted = db.Column(db.Boolean)
   audience_coverage = db.Column(db.Integer)
   Blogger = db.relationship('Blogger', back_populates='Posts')
-
