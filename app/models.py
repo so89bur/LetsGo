@@ -138,6 +138,7 @@ class Media(DictMixin, db.Model):
 
 class Place(DictMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  name = db.Column(db.String(255), unique=True)
   lat = db.Column(db.Float)
   lon = db.Column(db.Float)
   RoutePlaces = db.relationship('RoutePlace', back_populates='Place')
