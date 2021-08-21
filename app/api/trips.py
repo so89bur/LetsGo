@@ -18,6 +18,7 @@ def prepare_trip(instance):
       'username': blogger.username,
       'full_name': blogger.full_name,
       'followers': blogger.followers,
+      'verify': blogger.verify,
       'profile_pic_url': blogger.profile_pic_url,
       'is_business_account': blogger.is_business_account,
     })

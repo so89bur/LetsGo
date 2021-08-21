@@ -2,7 +2,7 @@
   <q-page class="trip-page">
     <q-card class="page_card">
       <q-toolbar class="bg-primary text-white">
-        Добавление новой поездки
+        {{ is_new ? 'Добавление новой поездки' : 'Редактирование поездки' }}
       </q-toolbar>
       <q-dialog v-model="is_showed_form_for_attach_blogger">
         <q-card style="width: 550px">
@@ -53,7 +53,6 @@
           <q-input
             v-if="['text', 'textarea', 'number'].includes(item.type)"
             filled
-            disable
             class="form_item"
             v-model="item.value"
             :type="item.type"
@@ -71,7 +70,6 @@
           :columns="columns"
           :pagination="pagination"
           row-key="name"
-          v-on:row-click="handler_table_row_click"
         >
           <template #no-data>
             <app-empty-info />
@@ -79,6 +77,7 @@
 
           <template #header="props">
             <q-tr :props="props">
+              <q-th />
               <q-th />
               <q-th
                 v-for="col in props.cols"
@@ -102,10 +101,18 @@
                   v-on:click="detach_bloger(props.row.id)"
                 />
               </q-td>
+              <q-td>
+                <q-checkbox
+                  v-model="props.row.verify"
+                  size="lg"
+                />
+              </q-td>
               <q-td
                 v-for="col in columns"
                 :key="col.name"
                 :props="props"
+                class="cursor-pointer"
+                @click="handler_table_row_click(props.row)"
               >
                 {{ props.row[col.name] }}
               </q-td>
@@ -184,54 +191,22 @@ export default {
         format: val => val ? 'Да' : 'Нет',
         field: 'followers'
       },
-      // {
-      //   name: 'count_likes',
-      //   label: 'Число лайков',
-      //   field: 'count_likes'
-      // },
-      // {
-      //   name: 'count_comments',
-      //   label: 'Число комментариев',
-      //   field: 'count_comments'
-      // },
-      // {
-      //   name: 'count_posts',
-      //   label: 'Число постов',
-      //   field: 'count_posts'
-      // },
-      // {
-      //   name: 'er',
-      //   label: 'ER',
-      //   field: 'er'
-      // },
-      // {
-      //   name: 'public',
-      //   label: 'Доступен',
-      //   field: 'public'
-      // },
-      // {
-      //   name: 'verify',
-      //   label: 'Потвержден',
-      //   field: 'verify'
-      // },
-      // {
-      //   name: 'Posts',
-      //   label: 'Посты',
-      //   format: val => `${val ? val.length : 0}`,
-      //   field: 'Posts'
-      // },
     ]
   }),
 
   watch: {
     id () {
       this.prepare_items()
-    }
+    },
   },
 
   computed: {
     id () {
       return this.$route.params.id
+    },
+
+    is_new () {
+      return this.id == 'new'
     },
 
     bloggers () {
@@ -243,7 +218,7 @@ export default {
   },
 
   methods: {
-    handler_table_row_click (event, row, index) {
+    handler_table_row_click (row) {
       window.open(`https://www.instagram.com/${row.username}`, '_blank')
     },
 
@@ -359,8 +334,7 @@ export default {
     }
 
     & > tbody > tr:hover {
-      background-color: $accent;
-      color: $light;
+      background-color: rgba($color: $accent, $alpha: 0.2);
     }
   }
 }
