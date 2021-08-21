@@ -12,7 +12,8 @@ export default {
 
   getters: {
     get_item: state => id => {
-      return state.items[id]
+      if (id == 'new')
+        return state.items[id]
     },
 
     get_items (state) {
