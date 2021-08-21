@@ -49,6 +49,7 @@ export default {
         { label: 'Поездки', name: 'trips' },
         { label: 'Маршруты', name: 'routes' },
         { label: 'Блогеры', name: 'bloggers' },
+        { label: 'Хештеги', name: 'hashtags' },
         { label: 'Посты', name: 'posts' },
       ]
     },

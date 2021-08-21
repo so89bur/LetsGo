@@ -39,6 +39,15 @@ const routes = [
   },
 
   {
+    path: '/hashtags',
+    component: () => import('pages/hashtags.vue'),
+    name: 'hashtags',
+    meta: {
+      title: 'Хештеги'
+    }
+  },
+
+  {
     path: '/posts',
     component: () => import('pages/posts.vue'),
     name: 'posts',
