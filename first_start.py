@@ -72,18 +72,20 @@ def write_posts():
 
 def write_bloggers():
   file = open('app/data.json')
+  statistic_file = open('app/other.json')
   file_data = json.load(file)
-  for username, info in file_data.items():
+  static_data = json.load(statistic_file)
+  for username, info in static_data.items():
     blogger = Blogger()
     blogger.username = username
-    blogger.full_name = info['full_name']
-    blogger.followers = info['followers']
-    blogger.is_business_account = info['is_business_account']
-    blogger.profile_pic_url = info['profile_pic_url']
-    blogger.count_likes = randint(5000, 10000)
-    blogger.count_comments = randint(100, 5000)
-    blogger.count_posts = randint(100, 5000)
-    blogger.er = randint(0, 20)
+    blogger.full_name = file_data.get(username, {}).get('full_name')
+    blogger.followers = file_data.get(username, {}).get('followers')
+    blogger.is_business_account = file_data.get(username, {}).get('is_business_account')
+    blogger.profile_pic_url = file_data.get(username, {}).get('profile_pic_url')
+    blogger.count_likes = info['likes_count']
+    blogger.count_comments = info['comments_count']
+    blogger.count_posts = info['posts_count']
+    blogger.er = info['coef']
     blogger.public = bool(randint(0, 1))
     blogger.verify = bool(randint(0, 1))
     random_posts = []
